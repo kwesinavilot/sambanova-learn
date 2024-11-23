@@ -3,6 +3,8 @@ import { RegularModeAgent } from '@/lib/agents/regular-agent';
 import { AdventureModeAgent } from '@/lib/agents/adventure-agent';
 import { StoryModeAgent } from '@/lib/agents/story-agent';
 
+export const dynamic = 'force-dynamic';
+
 const agents = {
   regular: new RegularModeAgent(),
   adventure: new AdventureModeAgent(),

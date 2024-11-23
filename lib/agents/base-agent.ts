@@ -9,7 +9,7 @@ export class BaseAgent {
 
   constructor() {
     this.model = new ChatOpenAI({
-      openAIApiKey: process.env.SAMBANOVA_API_KEY,
+      openAIApiKey: process.env.NEXT_PUBLIC_SAMBANOVA_API_KEY,
       configuration: {
         baseURL: 'https://api.sambanova.ai/v1/',
       },
