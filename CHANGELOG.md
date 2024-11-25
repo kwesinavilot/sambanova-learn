@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 # Changelog
 
+## [1.0.4] - 2023-09-25
+
+### Added
+- Server-side API route for secure SambaNova API access
+- Enhanced ExplainerAgent with friendly AI personality
+- Markdown-based content rendering system
+- Loading skeleton states for better UX
+
+### Changed
+- Split state management into separate user and mode stores
+- Updated store persistence configuration
+- Enhanced Explainer component with proper hydration
+- Improved AI prompt engineering for better explanations
+
+### Fixed
+- CORS issues with external API calls
+- State management and hydration conflicts
+- Data fetching race conditions
+
+### Architecture
+- Added API routes for secure external calls
+- Enhanced AI agent system with personality
+- Improved markdown content structure
+
 ## [1.0.3] - 2024-11-25
 
 ### Added

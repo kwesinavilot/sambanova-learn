@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useModeStore } from "@/lib/stores/mode-store";
 import { useRouter } from 'next/navigation';
+import MarkdownView from "@/components/modes/markdown-view";
 
 const ExplainerSkeleton = () => (
     <Card className="col-span-2 p-6">
@@ -46,19 +47,44 @@ const ExplainerSkeleton = () => (
 export default function Explainer() {
     const router = useRouter();
     const [isHydrated, setIsHydrated] = useState(false);
+    const [explanation, setExplanation] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
+
+    console.log('Rendered Explainer');
 
     // Get store values
     const topic = useModeStore((state) => state.topic);
     const difficulty = useModeStore((state) => state.difficulty);
+    console.log('Topic:', topic);
 
-    // Handle hydration
+    // Handle hydration and data fetching
     useEffect(() => {
         useModeStore.persist.rehydrate();
         setIsHydrated(true);
-    }, []);
+
+        if (topic && difficulty) {
+            fetch('/api/explain', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ topic, difficulty }),
+            })
+                .then(res => res.json())
+                .then(data => {
+                    setExplanation(data);
+                    setIsLoading(false);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    setIsLoading(false);
+                });
+        }
+    }, [topic, difficulty]);
 
     // Wait for hydration before rendering
-    if (!isHydrated) {
+    if (!isHydrated || isLoading) {
+        console.log('Waiting for hydration...');
         return <ExplainerSkeleton />;
     }
 
@@ -74,31 +100,13 @@ export default function Explainer() {
                 {/* Top Section */}
                 <div className="flex items-center justify-between mb-8">
                     <div className="space-y-2">
-                        <h2 className="text-2xl font-bold">{topic}</h2>
+                        <h2 className="text-2xl font-bold">{topic.charAt(0).toUpperCase() + topic.slice(1)}</h2>
                         <Badge variant="outline">{difficulty}</Badge>
                     </div>
                 </div>
 
                 <div className="space-y-4">
-                    <div>
-                        <p className="text-muted-foreground">
-                            [AI-generated explanation based on topic and difficulty]
-                        </p>
-                    </div>
-
-                    <div>
-                        <h3 className="font-semibold mb-2">Examples</h3>
-                        <div className="space-y-2">
-                            [AI-generated examples]
-                        </div>
-                    </div>
-
-                    <div>
-                        <h3 className="font-semibold mb-2">Key Concepts</h3>
-                        <ul className="list-disc list-inside text-muted-foreground">
-                            [AI-generated key points]
-                        </ul>
-                    </div>
+                    <MarkdownView content={explanation} />
                 </div>
             </ScrollArea>
         </Card>
