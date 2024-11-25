@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useModeStore } from "@/lib/stores/mode-store";
+import { useRouter } from 'next/navigation';
 
 const ExplainerSkeleton = () => (
     <Card className="col-span-2 p-6">
@@ -42,10 +44,28 @@ const ExplainerSkeleton = () => (
 );
 
 export default function Explainer() {
-    const [isLoading, setIsLoading] = useState(false);
+    const router = useRouter();
+    const [isHydrated, setIsHydrated] = useState(false);
 
-    if (isLoading) {
+    // Get store values
+    const topic = useModeStore((state) => state.topic);
+    const difficulty = useModeStore((state) => state.difficulty);
+
+    // Handle hydration
+    useEffect(() => {
+        useModeStore.persist.rehydrate();
+        setIsHydrated(true);
+    }, []);
+
+    // Wait for hydration before rendering
+    if (!isHydrated) {
         return <ExplainerSkeleton />;
+    }
+
+    // Redirect if no topic after hydration
+    if (!topic) {
+        router.push('/onboarding?mode=explain');
+        return null;
     }
 
     return (
@@ -54,14 +74,13 @@ export default function Explainer() {
                 {/* Top Section */}
                 <div className="flex items-center justify-between mb-8">
                     <div className="space-y-2">
-                        <h2 className="text-2xl font-bold">Addition</h2>
-                        <Badge variant="outline">Easy</Badge>
+                        <h2 className="text-2xl font-bold">{topic}</h2>
+                        <Badge variant="outline">{difficulty}</Badge>
                     </div>
                 </div>
 
                 <div className="space-y-4">
                     <div>
-                        {/* <h3 className="font-semibold mb-2">What is {userData.topic}?</h3> */}
                         <p className="text-muted-foreground">
                             [AI-generated explanation based on topic and difficulty]
                         </p>

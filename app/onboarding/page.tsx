@@ -13,6 +13,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { useUserStore } from '@/lib/stores/user-store';
+import { useModeStore } from '@/lib/stores/mode-store';
 import { Logo } from '@/components/logo';
 
 export default function Onboarding() {
@@ -20,7 +21,8 @@ export default function Onboarding() {
     const searchParams = useSearchParams();
     const mode = searchParams.get('mode');
     const [step, setStep] = useState(1);
-    const setUserData = useUserStore((state) => state.setUserData);
+    const setName = useUserStore((state) => state.setName);
+    const setModeData = useModeStore((state) => state.setModeData);
     const [formData, setFormData] = useState({
         name: '',
         topic: '',
@@ -41,14 +43,23 @@ export default function Onboarding() {
     };
 
     const handleNext = () => {
-        if (step < 3) {
-            setStep(step + 1);
+        if (step === 1) {
+            setName(formData.name);
+            setStep(2);
+        } else if (step === 2) {
+            setStep(3);
         } else {
-            // update the user's data in the store
-            setUserData(formData);
+            // Set the data first
+            setModeData({
+                mode: mode || '',
+                topic: formData.topic,
+                difficulty: formData.difficulty,
+            });
 
-            // redirect to the mode page
-            router.push(`/mode/${mode}`);
+            // Wait for next tick before navigation
+            setTimeout(() => {
+                router.push(`/mode/${mode}`);
+            }, 0);
         }
     };
 

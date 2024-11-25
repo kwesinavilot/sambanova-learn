@@ -1,17 +1,21 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 interface UserState {
   name: string;
-  topic: string;
-  difficulty: string;
-  setUserData: (data: { name: string; topic: string; difficulty: string }) => void;
-  clearUserData: () => void;
+  setName: (name: string) => void;
+  clearName: () => void;
 }
 
-export const useUserStore = create<UserState>((set) => ({
-  name: '',
-  topic: '',
-  difficulty: '',
-  setUserData: (data) => set(data),
-  clearUserData: () => set({ name: '', topic: '', difficulty: '' }),
-}));
+export const useUserStore = create<UserState>()(
+  persist(
+    (set) => ({
+      name: '',
+      setName: (name) => set({ name }),
+      clearName: () => set({ name: '' }),
+    }),
+    {
+      name: 'user-storage',
+    }
+  )
+);

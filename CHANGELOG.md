@@ -5,6 +5,59 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# Changelog
+
+## [1.0.3] - 2024-11-25
+
+### Added
+- New `StoreProvider` component in `/components/providers/store-provider.tsx`
+  - Handles store hydration at app level
+  - Includes client-side safety checks
+  - Provides loading state management
+
+### Changed
+- Modified root layout (`/app/layout.tsx`)
+  - Added `StoreProvider` within the `ThemeProvider`
+  - Maintained existing providers and configurations
+  - Preserved hydration warnings suppression
+
+- Updated Zustand store configuration (`mode-store.ts`)
+  - Added `skipHydration: true` to persist middleware
+  - Changed storage to `sessionStorage`
+  - Improved type safety and state management
+
+- Refactored Explainer component
+  - Removed redundant local state management
+  - Added proper hydration handling
+  - Improved routing logic for missing topics
+  - Added proper null state handling
+
+### Fixed
+- Infinite loop issue caused by state management conflicts
+- Hydration mismatches between server and client
+- Race conditions with persistence layer
+- State initialization timing issues
+
+### Architecture Changes
+- Implemented proper provider hierarchy:
+  1. ThemeProvider (outer)
+  2. StoreProvider
+  3. Application content
+  4. Toaster
+
+### Dependencies
+- No new dependencies added
+- Utilizing existing:
+  - Zustand for state management
+  - Next.js for routing
+  - React for component architecture
+
+### Notes
+- Store hydration now happens at the application root level
+- Components wait for hydration before rendering
+- Improved error handling and state management
+- Maintained existing theme and toast functionality
+
 ## [1.0.2] - 2023-09-25
 
 ### Added
