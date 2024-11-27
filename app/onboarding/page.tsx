@@ -55,6 +55,7 @@ export default function Onboarding() {
                 topic: formData.topic,
                 difficulty: formData.difficulty,
             });
+            console.log('Mode:', mode);
 
             // Wait for next tick before navigation
             setTimeout(() => {

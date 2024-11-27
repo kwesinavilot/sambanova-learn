@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useModeStore } from '@/lib/stores/mode-store';
+import { useUserStore } from '@/lib/stores/user-store';
 
 export function StoreProvider({ 
     children 
@@ -13,13 +14,14 @@ export function StoreProvider({
     useEffect(() => {
         // Only rehydrate on the client side
         if (typeof window !== 'undefined') {
+            useUserStore.persist.rehydrate();
             useModeStore.persist.rehydrate();
         }
         setIsHydrated(true);
     }, []);
 
+    // Show nothing until hydration is complete
     if (!isHydrated) {
-        // You might want to show a loading indicator here
         return null;
     }
 

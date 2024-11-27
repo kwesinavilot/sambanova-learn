@@ -7,6 +7,11 @@ import { useModeStore } from "@/lib/stores/mode-store";
 import { useRouter } from 'next/navigation';
 import MarkdownView from "@/components/modes/markdown-view";
 
+interface ExplainerProps {
+    topic: string;
+    difficulty: string;
+}
+
 const ExplainerSkeleton = () => (
     <Card className="col-span-2 p-6">
         <div className="space-y-8">
@@ -44,17 +49,13 @@ const ExplainerSkeleton = () => (
     </Card>
 );
 
-export default function Explainer() {
+export function Explainer({ topic, difficulty }: ExplainerProps) {
     const router = useRouter();
     const [isHydrated, setIsHydrated] = useState(false);
     const [explanation, setExplanation] = useState('');
     const [isLoading, setIsLoading] = useState(true);
 
     console.log('Rendered Explainer');
-
-    // Get store values
-    const topic = useModeStore((state) => state.topic);
-    const difficulty = useModeStore((state) => state.difficulty);
     console.log('Topic:', topic);
 
     // Handle hydration and data fetching
@@ -90,7 +91,7 @@ export default function Explainer() {
 
     // Redirect if no topic after hydration
     if (!topic) {
-        router.push('/onboarding?mode=explain');
+        router.push('/onboarding');
         return null;
     }
 

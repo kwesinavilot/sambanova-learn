@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 # Changelog
 
+# Changelog
+
+## [1.0.5] - 2024-01-08
+
+### Enhanced
+- Improved store hydration configuration across all stores
+- Standardized storage implementation using sessionStorage
+- Aligned user-store and mode-store configurations for consistent behavior
+
+### Technical Updates
+- Added skipHydration flag to user-store.ts
+- Added createJSONStorage implementation to user-store.ts
+- Maintained existing store functionality while improving hydration handling
+
+### Architecture
+- Standardized store configuration pattern:
+  - skipHydration: true
+  - sessionStorage implementation
+  - Consistent persist middleware usage
+
+### Other Notes
+- Archimedes Jr. AI personality
+- Multi-mode learning system (Story, Adventure, Regular)
+- SambaNova API integration
+- Mode-specific state management
+
 ## [1.0.4] - 2023-09-25
 
 ### Added
