@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card } from '@/components/ui/card';
+import MarkdownView from "@/components/modes/markdown-view";
 
 interface ChatSectionProps {
     name: string;
@@ -20,9 +21,55 @@ interface Message {
     sender: 'ai' | 'user';
 }
 
+const LoadingMessage = () => (
+    <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="flex justify-start"
+    >
+        <Card className="max-w-[80%] p-4 bg-primary/10 animate-pulse rounded">
+            <div className="h-6 w-80 bg-primary/20" />
+        </Card>
+    </motion.div>
+);
+
 export function ChatSection({ name, topic, difficulty }: ChatSectionProps) {
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+
+    // Initial message
+    useEffect(() => {
+        const getInitialMessage = async () => {
+            setIsLoading(true);
+            try {
+                const response = await fetch('/api/regular', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: "Welcome the user, introduce yourself and are you ready?",
+                        name,
+                        topic,
+                        difficulty
+                    }),
+                });
+
+                const data = await response.json();
+                setMessages([{
+                    id: Date.now().toString(),
+                    content: data,
+                    sender: 'ai'
+                }]);
+            } catch (error) {
+                console.error('Initial message error:', error);
+            }
+            setIsLoading(false);
+        };
+
+        getInitialMessage();
+    }, [name, topic, difficulty]);
 
     const handleSend = async () => {
         if (!input.trim()) return;
@@ -35,6 +82,7 @@ export function ChatSection({ name, topic, difficulty }: ChatSectionProps) {
 
         setMessages(prev => [...prev, userMessage]);
         setInput('');
+        setIsLoading(true);
 
         try {
             const response = await fetch('/api/regular', {
@@ -51,6 +99,7 @@ export function ChatSection({ name, topic, difficulty }: ChatSectionProps) {
             });
 
             const data = await response.json();
+            console.log("Chat response:", data);
 
             const aiMessage: Message = {
                 id: (Date.now() + 1).toString(),
@@ -62,12 +111,13 @@ export function ChatSection({ name, topic, difficulty }: ChatSectionProps) {
         } catch (error) {
             console.error('Chat error:', error);
         }
+        setIsLoading(false);
     };
 
     return (
-        <div className="col-span-4 h-[calc(105vh-12rem)] flex flex-col">
-            <ScrollArea className="flex-1 p-4">
-                <div className="space-y-4">
+        <div className="col-span-7 h-[calc(105vh-12rem)] flex flex-col">
+            <ScrollArea className="flex-1">
+                <div className="space-y-4 px-4 py-0">
                     {messages.map((message) => (
                         <motion.div
                             key={message.id}
@@ -77,14 +127,19 @@ export function ChatSection({ name, topic, difficulty }: ChatSectionProps) {
                         >
                             <Card
                                 className={`max-w-[80%] p-4 ${message.sender === 'ai'
-                                        ? 'bg-primary/10'
-                                        : 'bg-primary text-primary-foreground'
+                                    ? 'bg-primary/10'
+                                    : 'bg-primary text-primary-foreground'
                                     }`}
                             >
-                                {message.content}
+                                {message.sender === 'ai' ? (
+                                    <MarkdownView content={message.content} />
+                                ) : (
+                                    message.content
+                                )}
                             </Card>
                         </motion.div>
                     ))}
+                    {isLoading && <LoadingMessage />}
                 </div>
             </ScrollArea>
 
@@ -100,7 +155,7 @@ export function ChatSection({ name, topic, difficulty }: ChatSectionProps) {
                     <Button
                         onClick={handleSend}
                         size="icon"
-                        disabled={!input}
+                        disabled={!input || isLoading}
                         className='h-12 w-12 items-center justify-center'
                     >
                         <Send className="h-6 w-6" />
@@ -110,4 +165,3 @@ export function ChatSection({ name, topic, difficulty }: ChatSectionProps) {
         </div>
     );
 }
-

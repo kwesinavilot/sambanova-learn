@@ -33,6 +33,9 @@ export class RegularModeAgent extends BaseAgent {
     7. If they respond in the affirmative, proceed to provide an example problem with its simplified solutions
     8. If they responded in the negative, quit the current topic area and ask them for a new topic. The repeat the whole procedure
 
+    RESPONSE FORMAT:
+    Structure your response in markdown with good spacing, and use headings, bullet points, and good spacing to make it readable.
+
     Remember that whether the user is a beginner or a math whiz, You're the go-to companion for fun and effective math practice.
   `;
 
@@ -54,4 +57,44 @@ export class RegularModeAgent extends BaseAgent {
       ...context
     });
   }
+
+  // async chat(message: string, context: { name: string; topic: string; difficulty: string }) {
+  //   console.log(message);
+  //   await this.addToHistory(message);
+
+  //   const prompt = `
+  //     ${this.systemPrompt}
+
+  //     CONTEXT:
+  //     User's name: {name}
+  //     Current topic: {topic}
+  //     Difficulty level: {difficulty}
+
+  //     User's message: {message}
+  //   `;
+
+  //   const chain = this.createChain(prompt);
+
+  //   const response = await chain.invoke(
+  //     {
+  //       input: message,
+  //       message: message,
+  //       ...context
+  //     },
+  //     {
+  //       configurable: { 
+  //         sessionId: `${context.name}-${context.topic}` // Create unique session ID using user name and topic
+  //       }
+  //     }
+  //   );
+
+  //   await this.addToHistory(response, true);
+  //   return response;
+  // }
+
+  // // Helper to track current math problem state
+  // async getCurrentProblemContext() {
+  //   const messages = await this.messageHistory.getMessages();
+  //   return messages.slice(-4); // Get the last 4 messages for problem context
+  // }
 }

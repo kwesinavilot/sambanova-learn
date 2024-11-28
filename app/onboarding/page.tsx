@@ -58,9 +58,9 @@ export default function Onboarding() {
             console.log('Mode:', mode);
 
             // Wait for next tick before navigation
-            setTimeout(() => {
+            // setTimeout(() => {
                 router.push(`/mode/${mode}`);
-            }, 0);
+            // }, 0);
         }
     };
 

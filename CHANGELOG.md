@@ -9,7 +9,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 # Changelog
 
-## [1.0.5] - 2024-01-08
+## [1.0.6] - 2023-12-28
+
+### Added
+- Loading state indicator in Explainer component
+- Enhanced error handling for API responses
+- Data flow tracing with strategic console logging
+
+### Fixed
+- Removed redundant state management in MarkdownView component
+- Corrected response object handling in Explainer and ChatSection
+- Optimized rendering cycles to prevent unnecessary updates
+
+### Changed
+- Simplified MarkdownView implementation for better performance
+- Enhanced data extraction from API responses
+- Improved content display logic in Explainer component
+- Implemented better state management practices
+
+## [1.0.5] - 2024-01-27
 
 ### Enhanced
 - Improved store hydration configuration across all stores

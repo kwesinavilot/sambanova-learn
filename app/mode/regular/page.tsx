@@ -39,8 +39,9 @@ export default function RegularModePage() {
     }
 
     return (
-        <div className="grid grid-cols-6 gap-4">
+        <div className="grid grid-cols-12 gap-10">
             <Explainer topic={topic} difficulty={difficulty} />
+
             <ChatSection 
                 name={username} 
                 topic={topic} 

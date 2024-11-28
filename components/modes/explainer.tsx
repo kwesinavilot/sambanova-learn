@@ -13,7 +13,7 @@ interface ExplainerProps {
 }
 
 const ExplainerSkeleton = () => (
-    <Card className="col-span-2 p-6">
+    <Card className="col-span-3 p-6">
         <div className="space-y-8">
             {/* Title and Badge Skeleton */}
             <div className="space-y-2">
@@ -55,9 +55,6 @@ export function Explainer({ topic, difficulty }: ExplainerProps) {
     const [explanation, setExplanation] = useState('');
     const [isLoading, setIsLoading] = useState(true);
 
-    console.log('Rendered Explainer');
-    console.log('Topic:', topic);
-
     // Handle hydration and data fetching
     useEffect(() => {
         useModeStore.persist.rehydrate();
@@ -85,7 +82,6 @@ export function Explainer({ topic, difficulty }: ExplainerProps) {
 
     // Wait for hydration before rendering
     if (!isHydrated || isLoading) {
-        console.log('Waiting for hydration...');
         return <ExplainerSkeleton />;
     }
 
@@ -96,13 +92,12 @@ export function Explainer({ topic, difficulty }: ExplainerProps) {
     }
 
     return (
-        <Card className="col-span-2 p-6">
-            <ScrollArea className="h-[calc(100vh-12rem)]">
-                {/* Top Section */}
+        <Card className="col-span-3 p-2">
+            <ScrollArea className="h-[calc(100vh-12rem)] p-4">
                 <div className="flex items-center justify-between mb-8">
                     <div className="space-y-2">
                         <h2 className="text-2xl font-bold">{topic.charAt(0).toUpperCase() + topic.slice(1)}</h2>
-                        <Badge variant="outline">{difficulty}</Badge>
+                        <Badge variant="outline">Difficulty: {difficulty}</Badge>
                     </div>
                 </div>
 
