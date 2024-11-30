@@ -42,7 +42,8 @@ export default function RegularModePage() {
         <div className="grid grid-cols-12 gap-10">
             <Explainer topic={topic} difficulty={difficulty} />
 
-            <ChatSection 
+            <ChatSection
+                mode="regular"
                 name={username} 
                 topic={topic} 
                 difficulty={difficulty} 
