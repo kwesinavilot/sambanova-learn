@@ -6,19 +6,18 @@ import { StoryModeAgent } from '@/lib/agents/story-agent';
 export const dynamic = 'force-dynamic';
 
 type AgentType = {
-  [key: string]: RegularModeAgent; // | AdventureModeAgent | StoryModeAgent;
+  [key: string]: RegularModeAgent | AdventureModeAgent | StoryModeAgent;
 };
 
 const agents: AgentType = {
   regular: new RegularModeAgent(),
-  // adventure: new AdventureModeAgent(),
-  // story: new StoryModeAgent(),
+  adventure: new AdventureModeAgent(),
+  story: new StoryModeAgent(),
 };
 
 export async function POST(request: Request) {
   try {
     const { mode, message, name, topic, difficulty } = await request.json();
-    console.log('API Request:', { mode, message, name, topic, difficulty });
     const agent = agents[mode];
 
     if (!agent) {
@@ -26,7 +25,6 @@ export async function POST(request: Request) {
     }
 
     const result = await agent.chat(message, { name, topic, difficulty });
-    console.log('API Result:', result);
 
     return NextResponse.json(result);
   } catch (error) {

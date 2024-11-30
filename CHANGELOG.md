@@ -7,7 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 # Changelog
 
-## [1.0.7] - 2024-01-28
+## [1.0.7] - 2024-11-30
+
+### Added
+- Added functionality for the Story and Adventure modes
+
+## [1.0.7] - 2024-11-30
 
 ### Enhanced
 - Improved mode handling between URL parameters and stored state
