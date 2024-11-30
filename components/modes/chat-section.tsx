@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Send } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -10,6 +10,7 @@ import { Card } from '@/components/ui/card';
 import MarkdownView from "@/components/modes/markdown-view";
 
 interface ChatSectionProps {
+    mode: string;
     name: string;
     topic: string;
     difficulty: string;
@@ -33,22 +34,24 @@ const LoadingMessage = () => (
     </motion.div>
 );
 
-export function ChatSection({ name, topic, difficulty }: ChatSectionProps) {
+export function ChatSection({ mode, name, topic, difficulty }: ChatSectionProps) {
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const scrollAreaRef = useRef<HTMLDivElement>(null);
 
     // Initial message
     useEffect(() => {
         const getInitialMessage = async () => {
             setIsLoading(true);
             try {
-                const response = await fetch('/api/regular', {
+                const response = await fetch('/api/chat', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
+                        mode,
                         message: "Welcome the user, introduce yourself and are you ready?",
                         name,
                         topic,
@@ -57,6 +60,7 @@ export function ChatSection({ name, topic, difficulty }: ChatSectionProps) {
                 });
 
                 const data = await response.json();
+
                 setMessages([{
                     id: Date.now().toString(),
                     content: data,
@@ -85,12 +89,13 @@ export function ChatSection({ name, topic, difficulty }: ChatSectionProps) {
         setIsLoading(true);
 
         try {
-            const response = await fetch('/api/regular', {
+            const response = await fetch('/api/chat', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
+                    mode,
                     message: input,
                     name,
                     topic,
@@ -99,7 +104,6 @@ export function ChatSection({ name, topic, difficulty }: ChatSectionProps) {
             });
 
             const data = await response.json();
-            console.log("Chat response:", data);
 
             const aiMessage: Message = {
                 id: (Date.now() + 1).toString(),
@@ -114,10 +118,21 @@ export function ChatSection({ name, topic, difficulty }: ChatSectionProps) {
         setIsLoading(false);
     };
 
+    const scrollToBottom = () => {
+        if (scrollAreaRef.current) {
+            scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight;
+        }
+    };
+
+    // Scroll when messages update
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages]);
+
     return (
         <div className="col-span-7 h-[calc(105vh-12rem)] flex flex-col">
-            <ScrollArea className="flex-1">
-                <div className="space-y-4 px-4 py-0">
+            <ScrollArea className="flex-1" ref={scrollAreaRef}>
+                <div className="space-y-4 px-4 pt-0 pb-8">
                     {messages.map((message) => (
                         <motion.div
                             key={message.id}

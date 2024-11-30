@@ -38,7 +38,8 @@ export default function Home() {
 
   const handleModeSelect = (modeId: string) => {
     if (name) {
-      router.push(`/mode/${modeId}`);
+      // router.push(`/mode/${modeId}`);
+      router.push(`/learn?mode=${modeId}`);
     } else {
       router.push(`/onboarding?mode=${modeId}`);
     }

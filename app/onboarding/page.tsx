@@ -20,13 +20,24 @@ export default function Onboarding() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const mode = searchParams.get('mode');
-    const [step, setStep] = useState(1);
     const setName = useUserStore((state) => state.setName);
     const setModeData = useModeStore((state) => state.setModeData);
+
+    // Get existing data from stores
+    const existingName = useUserStore.getState().name;
+    const existingTopic = useModeStore.getState().topic;
+    const existingDifficulty = useModeStore.getState().difficulty;
+
+    const [step, setStep] = useState(() => {
+        if (!existingName) return 1;    // Default to name input for new users
+        if (!existingTopic) return 2;   // Default to topic selection for returning users
+        return 2; // Default to topic selection for returning users
+    });
+
     const [formData, setFormData] = useState({
-        name: '',
-        topic: '',
-        difficulty: '',
+        name: existingName || '',
+        topic: existingTopic || '',
+        difficulty: existingDifficulty || '',
     });
 
     const validateInput = (value: string, step: number) => {
@@ -58,9 +69,9 @@ export default function Onboarding() {
             console.log('Mode:', mode);
 
             // Wait for next tick before navigation
-            // setTimeout(() => {
-                router.push(`/mode/${mode}`);
-            // }, 0);
+            setTimeout(() => {
+                router.push(`/learn?mode=${mode}`);
+            }, 0);
         }
     };
 
@@ -103,8 +114,8 @@ export default function Onboarding() {
             ),
         },
         3: {
-            title: "Great choice!",
-            subtext: "Before we start, let's get to know you.",
+            title: `Great choice, ${formData.name}!`,
+            subtext: "Select the difficulty level for your practice.",
             question: "Let's pick a difficulty level:",
             input: (
                 <Select
@@ -185,7 +196,7 @@ export default function Onboarding() {
                                 animate={{ opacity: 1 }}
                                 className="flex justify-center gap-4"
                             >
-                                {step > 1 && (
+                                {(step > 1 && !existingName) && (
                                     <Button
                                         size="lg"
                                         onClick={handleBack}
@@ -195,6 +206,7 @@ export default function Onboarding() {
                                         Back
                                     </Button>
                                 )}
+
                                 <Button
                                     size="lg"
                                     onClick={handleNext}

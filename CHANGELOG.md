@@ -7,7 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 # Changelog
 
-# Changelog
+## [1.0.7] - 2024-01-28
+
+### Enhanced
+- Improved mode handling between URL parameters and stored state
+- Optimized initialization sequence in learn page
+- Added auto-scroll functionality to chat interface
+- Refined returning user experience in onboarding flow
+
+### Technical Updates
+- Implemented proper state validation before component rendering
+- Added sequential state updates for consistent initialization
+- Enhanced chat component scroll behavior
+- Streamlined navigation logic for existing users
+
+### Architecture
+- Standardized mode priority handling:
+  - URL parameters take precedence
+  - Fallback to stored mode when URL param absent
+  - Validation before state updates
+- Improved component mounting sequence
 
 ## [1.0.6] - 2023-12-28
 

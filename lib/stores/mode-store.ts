@@ -24,7 +24,7 @@ export const useModeStore = create<ModeState>()(
         }),
         {
             name: 'mode-storage',
-            storage: createJSONStorage(() => sessionStorage), // Change to sessionStorage
+            storage: createJSONStorage(() => sessionStorage),
             skipHydration: true,
         }
     )
