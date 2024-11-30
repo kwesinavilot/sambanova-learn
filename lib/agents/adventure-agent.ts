@@ -41,21 +41,37 @@ export class AdventureModeAgent extends BaseAgent {
   `;
 
   async chat(message: string, context: { name: string; topic: string; difficulty: string }) {
+    console.log(message);
+    await this.addToHistory(message);
+
     const prompt = `
       ${this.systemPrompt}
-        
+
       CONTEXT:
       User's name: {name}
       Current topic: {topic}
       Difficulty level: {difficulty}
-        
+
       User's message: {message}
     `;
 
     const chain = this.createChain(prompt);
-    return chain.invoke({
-      message,
-      ...context
-    });
+
+    const response = await chain.invoke(
+      {
+        input: message,
+        message: message,
+        ...context
+      },
+    );
+
+    await this.addToHistory(response, true);
+    return response;
+  }
+
+  // Helper to track current math problem state
+  async getCurrentProblemContext() {
+    const messages = await this.messageHistory.getMessages();
+    return messages.slice(-4); // Get the last 4 messages for problem context
   }
 }

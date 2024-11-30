@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 # Changelog
 
+## [1.0.8] - 2024-11-30
+
+### Added
+- Multi-turn chat functionality in Regular mode
+- Message history tracking for continuous conversations
+- Chat context preservation for math problem solving
+- Separate chain handling for Explainer and Regular agents
+
+### Technical Updates
+- Implemented ChatMessageHistory for conversation state
+- Added RunnableWithMessageHistory for chat flow management
+- Created dedicated createSimpleChain for one-off explanations
+- Enhanced BaseAgent with flexible chain creation options
+
+### Architecture
+- Split chain creation strategies:
+  - Simple chains for stateless interactions
+  - History-enabled chains for conversational flows
+  - Optimized memory management for chat sessions
+
+
 ## [1.0.7] - 2024-11-30
 
 ### Added

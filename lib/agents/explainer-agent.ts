@@ -18,10 +18,8 @@ export class ExplainerAgent extends BaseAgent {
             Use headings, bullet points, and good spacing to make it readable.
         `;
 
-        const chain = this.createChain(prompt);
-
-        const response = await chain.invoke(data);
-
-        return response;
+        // Use simple chain for one-off explanations
+        const chain = this.createSimpleChain(prompt);
+        return chain.invoke(data);
     }
 }
